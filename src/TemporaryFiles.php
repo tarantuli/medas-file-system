@@ -16,26 +16,13 @@ class TemporaryFiles
         register_shutdown_function(fn() => $this->delete());
     }
 
-    public function delete()
+    private function delete()
     {
         foreach ($this->temporaryFiles as $file) {
             if (file_exists($file)) {
                 unlink($file);
             }
         }
-    }
-
-    public function write(string $content): string
-    {
-        $tempFilename = $this->create();
-
-        // Use fopen/fwrite/fclose instead of file_put_contents to bypass memory problems
-        $fh = fopen($tempFilename, 'w');
-
-        fwrite($fh, $content);
-        fclose($fh);
-
-        return $tempFilename;
     }
 
     public function create($content = null): string
