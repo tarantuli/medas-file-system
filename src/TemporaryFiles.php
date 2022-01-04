@@ -45,5 +45,4 @@ class TemporaryFiles
 
         return $tempFilename;
     }
-
 }
