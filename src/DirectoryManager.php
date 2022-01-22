@@ -34,4 +34,34 @@ class DirectoryManager
         );
     }
 
+    public function create(string $path): void
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $path = str_replace('/', '\\', $path);
+        }
+
+        // Start in the working directory if possible
+        if (str_starts_with($path, getcwd())) {
+            $currentDirectory = getcwd() . DIRECTORY_SEPARATOR;
+            $path = substr($path, strlen($currentDirectory));
+        }
+        else {
+            $currentDirectory = '';
+        }
+
+        // Check each remaining part in order
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
+
+        foreach ($parts as $part) {
+            $currentDirectory .= $part . DIRECTORY_SEPARATOR;
+
+            if (file_exists($currentDirectory) && is_dir($currentDirectory)) {
+                continue;
+            }
+
+            if (@ mkdir($currentDirectory) === false) {
+                throw new Exceptions\CantCreateDirectoryException($currentDirectory);
+            }
+        }
+    }
 }
