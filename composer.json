@@ -11,7 +11,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "morphp/medas-core": "dev-dev",
         "morphp/medas-service-manager": "dev-dev"
     },
     "require-dev": {

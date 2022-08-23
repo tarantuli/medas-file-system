@@ -16,7 +16,7 @@ class TemporaryFiles
         register_shutdown_function(fn() => $this->delete());
     }
 
-    private function delete()
+    private function delete(): void
     {
         foreach ($this->temporaryFiles as $file) {
             if (file_exists($file)) {
