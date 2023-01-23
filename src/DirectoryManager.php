@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Medas\FileSystem;
 
 use Medas\ServiceManager\Attributes\Service;
+use Medas\ServiceManager\Interfaces\DirectoryManager as DirectoryManagerInterface;
 
 #[Service]
-class DirectoryManager
+class DirectoryManager implements DirectoryManagerInterface
 {
     public function loadPhpFiles(string $directory): void
     {
