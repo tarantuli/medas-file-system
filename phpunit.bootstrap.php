@@ -3,7 +3,14 @@
 declare(strict_types=1);
 
 use Medas\FileSystem\FileSystemPackage;
-use Medas\ServiceManager\ServiceManager;
+use Medas\ServiceManager\{ServiceConfig, ServiceManager};
 
-$sm = ServiceManager::get();
-$sm->addPackage(FileSystemPackage::instance());
+new ServiceManager(function (): ServiceConfig {
+    $config = new ServiceConfig();
+
+    $config->addPackages([
+        FileSystemPackage::instance(),
+    ]);
+
+    return $config;
+});
