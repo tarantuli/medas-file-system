@@ -17,12 +17,12 @@ class DirectoryManager implements DirectoryManagerInterface
         }
     }
 
-    public function recursiveFindByExtension(string $directory, string $extension): \RegexIterator
+    public function recursiveFindByExtension(string $directory, string $extension, string $ignorePattern = null): \Generator
     {
-        return $this->recursiveFind($directory, sprintf('/\.%s$/i', preg_quote($extension)));
+        return $this->recursiveFind($directory, sprintf('/\.%s$/i', preg_quote($extension)), $ignorePattern);
     }
 
-    public function recursiveFind(string $directory, string $pattern): \RegexIterator
+    public function recursiveFindByIterator(string $directory, string $pattern): \RegexIterator
     {
         return new \RegexIterator(
             new \RecursiveIteratorIterator(
@@ -33,6 +33,31 @@ class DirectoryManager implements DirectoryManagerInterface
             ),
             $pattern
         );
+    }
+
+    public function recursiveFind(string $directory, string $matchPattern, string $ignorePattern = null): \Generator
+    {
+        $handle = opendir($directory);
+
+        while (false !== $entry = readdir($handle)) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+
+            $entry = $directory . DIRECTORY_SEPARATOR . $entry;
+
+            if (is_dir($entry)) {
+                yield from $this->recursiveFind($entry, $matchPattern, $ignorePattern);
+            }
+
+            if (preg_match($matchPattern, $entry)) {
+                if ($ignorePattern && preg_match($ignorePattern, $entry)) {
+                    continue;
+                }
+
+                yield $entry;
+            }
+        }
     }
 
     public function create(string $path): void
