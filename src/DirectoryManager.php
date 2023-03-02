@@ -48,6 +48,7 @@ class DirectoryManager implements DirectoryManagerInterface
 
             if (is_dir($entry)) {
                 yield from $this->recursiveFind($entry, $matchPattern, $ignorePattern);
+                continue;
             }
 
             if (preg_match($matchPattern, $entry)) {
