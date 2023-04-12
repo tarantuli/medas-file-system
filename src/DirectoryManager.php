@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
-use Medas\ServiceManager\Attributes\Service;
-use Medas\ServiceManager\Interfaces\DirectoryManager as DirectoryManagerInterface;
+use Medas\Core\Interfaces\DirectoryManager as DirectoryManagerInterface;
+use Medas\ServiceManager\Service;
 
 #[Service]
 class DirectoryManager implements DirectoryManagerInterface
@@ -20,19 +20,6 @@ class DirectoryManager implements DirectoryManagerInterface
     public function recursiveFindByExtension(string $directory, string $extension, string $ignorePattern = null): \Generator
     {
         return $this->recursiveFind($directory, sprintf('/\.%s$/i', preg_quote($extension)), $ignorePattern);
-    }
-
-    public function recursiveFindByIterator(string $directory, string $pattern): \RegexIterator
-    {
-        return new \RegexIterator(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $directory,
-                    \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-                )
-            ),
-            $pattern
-        );
     }
 
     public function recursiveFind(string $directory, string $matchPattern, string $ignorePattern = null): \Generator
@@ -59,6 +46,19 @@ class DirectoryManager implements DirectoryManagerInterface
                 yield $entry;
             }
         }
+    }
+
+    public function recursiveFindByIterator(string $directory, string $pattern): \RegexIterator
+    {
+        return new \RegexIterator(
+            new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator(
+                    $directory,
+                    \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+                )
+            ),
+            $pattern
+        );
     }
 
     public function create(string $path): void

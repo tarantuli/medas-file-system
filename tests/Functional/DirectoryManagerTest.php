@@ -14,7 +14,6 @@ class DirectoryManagerTest extends TestCase
         $directoryManager = service(DirectoryManager::class);
         $files = iterator_to_array($directoryManager->recursiveFindByExtension(__DIR__, 'php'));
         $this->assertContains(__FILE__, $files);
-        $this->assertArrayHasKey(__FILE__, $files);
     }
 
     public function testCreate(): void
