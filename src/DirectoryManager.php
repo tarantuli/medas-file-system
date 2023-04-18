@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
+use Medas\Core\Attributes\Service;
 use Medas\Core\Interfaces\DirectoryManager as DirectoryManagerInterface;
-use Medas\ServiceManager\Service;
 
 #[Service]
 class DirectoryManager implements DirectoryManagerInterface

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
-use Medas\ServiceManager\Service;
+use Medas\Core\Attributes\Service;
 
 #[Service]
 class PathNormalizer
