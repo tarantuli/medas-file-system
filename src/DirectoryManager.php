@@ -68,8 +68,12 @@ class DirectoryManager implements DirectoryManagerInterface
         }
 
         // Start in the working directory if possible
-        if (str_starts_with($path, getcwd())) {
-            $currentDirectory = getcwd() . DIRECTORY_SEPARATOR;
+        $workingDirectory = getcwd();
+
+        if (str_starts_with($path, $workingDirectory)) {
+            $currentDirectory = str_ends_with($workingDirectory, DIRECTORY_SEPARATOR)
+                ? $workingDirectory
+                : $workingDirectory . DIRECTORY_SEPARATOR;
             $path = substr($path, strlen($currentDirectory));
         }
         else {
@@ -86,7 +90,12 @@ class DirectoryManager implements DirectoryManagerInterface
                 continue;
             }
 
-            if (@ mkdir($currentDirectory) === false) {
+            try {
+                if (mkdir($currentDirectory) === false) {
+                    throw new Exceptions\CantCreateDirectoryException($currentDirectory);
+                }
+            }
+            catch (\Exception) {
                 throw new Exceptions\CantCreateDirectoryException($currentDirectory);
             }
         }

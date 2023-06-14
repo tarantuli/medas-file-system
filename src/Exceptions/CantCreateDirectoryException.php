@@ -10,11 +10,11 @@ class CantCreateDirectoryException extends BaseException
 {
     public function __construct(string $directory)
     {
-        parent::__construct($directory);
+        parent::__construct($directory, getcwd());
     }
 
     public function pattern(): string
     {
-        return 'Failed to create directory %s';
+        return 'Failed to create directory %s, with working directory %s';
     }
 }
