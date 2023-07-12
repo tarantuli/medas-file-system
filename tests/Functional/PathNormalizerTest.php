@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Medas\Test\Functional;
+namespace Medas\FileSystemTest\Functional;
 
 use Medas\FileSystem\PathNormalizer;
 use PHPUnit\Framework\TestCase;

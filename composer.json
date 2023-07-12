@@ -11,15 +11,16 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "morphp/medas-service-manager": "dev-dev"
+        "morphp/medas-core": "dev-dev"
     },
     "require-dev": {
+        "morphp/medas-service-manager": "dev-dev",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
             "Medas\\FileSystem\\": "src/",
-            "Medas\\Test\\": "tests/"
+            "Medas\\FileSystemTest\\": "tests/"
         }
     }
 }
