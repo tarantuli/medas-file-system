@@ -33,7 +33,7 @@ class DirectoryManager implements DirectoryManagerInterface
 
             $entry = $directory . DIRECTORY_SEPARATOR . $entry;
 
-            if (is_dir($entry)) {
+            if (file_exists($entry . DIRECTORY_SEPARATOR . '..')) {
                 yield from $this->recursiveFind($entry, $matchPattern, $ignorePattern);
                 continue;
             }
@@ -86,7 +86,7 @@ class DirectoryManager implements DirectoryManagerInterface
         foreach ($parts as $part) {
             $currentDirectory .= $part . DIRECTORY_SEPARATOR;
 
-            if (file_exists($currentDirectory) && is_dir($currentDirectory)) {
+            if (file_exists($currentDirectory) && file_exists($currentDirectory . DIRECTORY_SEPARATOR . '..')) {
                 continue;
             }
 
