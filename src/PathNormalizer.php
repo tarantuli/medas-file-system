@@ -33,10 +33,8 @@ class PathNormalizer
         }
 
         $startsWithDoubleBackslash = str_starts_with($path, self::DOUBLE_BACKSLASH);
-
         $path = str_replace(self::BACKSLASH, self::SLASH, $path);
         $startsWithSlash = (!$startsWithDoubleBackslash) && str_starts_with($path, self::SLASH);
-
         $parts = array_filter(explode(self::SLASH, $path), fn($part) => strlen($part));
         $absolutes = [];
 

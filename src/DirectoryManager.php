@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
-use Medas\Core\Attributes\Service;
-use Medas\Core\Interfaces\DirectoryManager as DirectoryManagerInterface;
+use Medas\Core\{Attributes\Service, Interfaces\DirectoryManager as DirectoryManagerInterface};
 
 #[Service]
 class DirectoryManager implements DirectoryManagerInterface
@@ -17,9 +16,17 @@ class DirectoryManager implements DirectoryManagerInterface
         }
     }
 
-    public function recursiveFindByExtension(string $directory, string $extension, string $ignorePattern = null): \Generator
+    public function recursiveFindByExtension(
+        string $directory,
+        string $extension,
+        string $ignorePattern = null
+    ): \Generator
     {
-        return $this->recursiveFind($directory, sprintf('/\.%s$/i', preg_quote($extension)), $ignorePattern);
+        return $this->recursiveFind(
+            $directory,
+            sprintf('/\.%s$/i', preg_quote($extension)),
+            $ignorePattern
+        );
     }
 
     public function recursiveFind(string $directory, string $matchPattern, string $ignorePattern = null): \Generator
@@ -51,12 +58,10 @@ class DirectoryManager implements DirectoryManagerInterface
     public function recursiveFindByIterator(string $directory, string $pattern): \RegexIterator
     {
         return new \RegexIterator(
-            new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $directory,
-                    \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-                )
-            ),
+            new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(
+                $directory,
+                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )),
             $pattern
         );
     }
@@ -74,6 +79,7 @@ class DirectoryManager implements DirectoryManagerInterface
             $currentDirectory = str_ends_with($workingDirectory, DIRECTORY_SEPARATOR)
                 ? $workingDirectory
                 : $workingDirectory . DIRECTORY_SEPARATOR;
+
             $path = substr($path, strlen($currentDirectory));
         }
         else {

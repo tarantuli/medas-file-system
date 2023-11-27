@@ -27,7 +27,7 @@ class TemporaryFiles
 
     public function create($content = null): string
     {
-        $tempFilename = @ tempnam(sys_get_temp_dir(), 'file');
+        $tempFilename = @tempnam(sys_get_temp_dir(), 'file');
 
         if ($tempFilename === false) {
             throw new Exceptions\CantCreateTemporaryFileException();
@@ -40,6 +40,7 @@ class TemporaryFiles
             $fh = fopen($tempFilename, 'w');
 
             fwrite($fh, $content);
+
             fclose($fh);
         }
 
