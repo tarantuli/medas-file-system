@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace Medas\FileSystemTest\Functional;
 
-use Medas\FileSystem\DirectoryManager;
+use Medas\FileSystem\{DirectoryCreator, FileFinder};
 use PHPUnit\Framework\TestCase;
 
 class DirectoryManagerTest extends TestCase
 {
-    public function testRecursiveByExtension(): void
+    public function testFindByExtension(): void
     {
-        $directoryManager = service(DirectoryManager::class);
-        $files = iterator_to_array($directoryManager->recursiveFindByExtension(__DIR__, 'php'));
+        $fileFinder = service(FileFinder::class);
+        $files = iterator_to_array($fileFinder->findByExtension(__DIR__, 'php'));
+
         $this->assertContains(__FILE__, $files);
     }
 
-    public function testCreate(): void
+    public function testCreateDirectory(): void
     {
-        $directoryManager = service(DirectoryManager::class);
+        $directoryCreator = service(DirectoryCreator::class);
         $path = __DIR__ . '/test-directory';
 
         if (file_exists($path)) {
             rmdir($path);
         }
 
-        $directoryManager->create($path);
+        $directoryCreator->create($path);
+
         self::assertDirectoryExists($path);
 
         if (file_exists($path)) {

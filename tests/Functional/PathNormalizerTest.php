@@ -11,42 +11,19 @@ class PathNormalizerTest extends TestCase
 {
     public function testBasics(): void
     {
-        $currentDirPlusVarPlusTest = __DIR__ . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'test';
+        $currentDirPlusVarPlusTest = __DIR__
+            . DIRECTORY_SEPARATOR
+            . 'var'
+            . DIRECTORY_SEPARATOR
+            . 'test';
 
-        self::assertEquals(
-            $currentDirPlusVarPlusTest,
-            $this->normalize('var/test')
-        );
-
-        self::assertEquals(
-            $currentDirPlusVarPlusTest,
-            $this->normalize('./var/test')
-        );
-
-        self::assertEquals(
-            $currentDirPlusVarPlusTest,
-            $this->normalize('higher/../var/test')
-        );
-
-        self::assertEquals(
-            $currentDirPlusVarPlusTest,
-            $this->normalize('var//test')
-        );
-
-        self::assertEquals(
-            $currentDirPlusVarPlusTest,
-            $this->normalize('var/./test')
-        );
-
-        self::assertEquals(
-            '/var/log/test',
-            $this->normalize('/var/log/test')
-        );
-
-        self::assertEquals(
-            '\\\\var\\log\\test',
-            $this->normalize('\\\\var\\log\\test')
-        );
+        self::assertEquals($currentDirPlusVarPlusTest, $this->normalize('var/test'));
+        self::assertEquals($currentDirPlusVarPlusTest, $this->normalize('./var/test'));
+        self::assertEquals($currentDirPlusVarPlusTest, $this->normalize('higher/../var/test'));
+        self::assertEquals($currentDirPlusVarPlusTest, $this->normalize('var//test'));
+        self::assertEquals($currentDirPlusVarPlusTest, $this->normalize('var/./test'));
+        self::assertEquals('/var/log/test', $this->normalize('/var/log/test'));
+        self::assertEquals('\\\\var\\log\\test', $this->normalize('\\\\var\\log\\test'));
     }
 
     private function normalize(
@@ -56,6 +33,11 @@ class PathNormalizerTest extends TestCase
     ): string
     {
         $workingDirectory ??= __DIR__;
-        return service(PathNormalizer::class)->normalize($path, $directorySeparator, $workingDirectory);
+
+        return service(PathNormalizer::class)->normalize(
+            $path,
+            $directorySeparator,
+            $workingDirectory
+        );
     }
 }
