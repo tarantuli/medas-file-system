@@ -1,6 +1,10 @@
 {
     "name": "morphp/medas-file-system",
     "description": "Medas file system",
+    "keywords": [
+        "storage",
+        "backend"
+    ],
     "authors": [
         {
             "name": "Patrick Morpey",
