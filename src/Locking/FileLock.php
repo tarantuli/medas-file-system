@@ -16,7 +16,7 @@ class FileLock
     public const BLOCKING = true;
     public const NON_BLOCKING = false;
 
-    private mixed $handle;
+    private mixed $handle = null;
 
     public function __construct(
         private readonly string   $path,
