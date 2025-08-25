@@ -32,4 +32,15 @@ readonly class LockingFileWriter
 
         $lock->release();
     }
+
+    public function append(string $path, string $contents): void
+    {
+        $lock = new Locking\FileLock($path, new Locking\Settings(Locking\FileLock::EXCLUSIVE));
+
+        $lock->acquire();
+
+        file_put_contents($path, file_get_contents($path) . $contents);
+
+        $lock->release();
+    }
 }
