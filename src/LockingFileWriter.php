@@ -22,24 +22,13 @@ readonly class LockingFileWriter
         return $contents;
     }
 
-    public function write(string $path, string $contents): void
+    public function write(string $path, string $contents, bool $append = false): void
     {
         $lock = new Locking\FileLock($path, new Locking\Settings(Locking\FileLock::EXCLUSIVE));
 
         $lock->acquire();
 
-        file_put_contents($path, $contents);
-
-        $lock->release();
-    }
-
-    public function append(string $path, string $contents): void
-    {
-        $lock = new Locking\FileLock($path, new Locking\Settings(Locking\FileLock::EXCLUSIVE));
-
-        $lock->acquire();
-
-        file_put_contents($path, file_get_contents($path) . $contents);
+        file_put_contents($path, $contents, $append ? FILE_APPEND : 0);
 
         $lock->release();
     }
