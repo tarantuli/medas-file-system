@@ -20,11 +20,14 @@ class FileLock
     private readonly string $lockFile;
 
     public function __construct(
-        string   $path,
+        string                    $path,
         private readonly Settings $settings,
     )
     {
-        $this->lockFile = $this->settings->lockDirectory . '/' . sha1($path) . '.lock';
+        $this->lockFile = $this->settings->lockDirectory
+            . DIRECTORY_SEPARATOR
+            . sha1($path)
+            . '.lock';
     }
 
     public function __destruct()

@@ -13,10 +13,17 @@ readonly class LockingFileWriter
         private string $lockDirectory,
     )
     {
+        if (!is_dir($this->lockDirectory)) {
+            (new DirectoryCreator())->create($this->lockDirectory);
+        }
     }
+
     public function read(string $path): string
     {
-        $lock = new Locking\FileLock($path, new Locking\Settings($this->lockDirectory, Locking\FileLock::SHARED));
+        $lock = new Locking\FileLock(
+            $path,
+            new Locking\Settings($this->lockDirectory, Locking\FileLock::SHARED)
+        );
 
         $lock->acquire();
 
@@ -29,7 +36,10 @@ readonly class LockingFileWriter
 
     public function write(string $path, string $contents, bool $append = false): void
     {
-        $lock = new Locking\FileLock($path, new Locking\Settings($this->lockDirectory, Locking\FileLock::EXCLUSIVE));
+        $lock = new Locking\FileLock(
+            $path,
+            new Locking\Settings($this->lockDirectory, Locking\FileLock::EXCLUSIVE)
+        );
 
         $lock->acquire();
 
