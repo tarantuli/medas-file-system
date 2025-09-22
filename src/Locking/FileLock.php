@@ -17,12 +17,14 @@ class FileLock
     public const NON_BLOCKING = false;
 
     private mixed $handle = null;
+    private readonly string $lockFile;
 
     public function __construct(
-        private readonly string   $path,
+        string   $path,
         private readonly Settings $settings,
     )
     {
+        $this->lockFile = $this->settings->lockDirectory . '/' . sha1($path) . '.lock';
     }
 
     public function __destruct()
@@ -59,7 +61,7 @@ class FileLock
         } while (microtime(true) - $startTimestamp <= $this->settings->maxRetryTime);
 
         if (!$success) {
-            throw new FailedToAcquireLockOnFile($lockType, $this->path);
+            throw new FailedToAcquireLockOnFile($lockType, $this->lockFile);
         }
     }
 
@@ -70,8 +72,8 @@ class FileLock
         }
 
         if ($this->settings->removeOnRelease && $this->flock(LOCK_EX | LOCK_NB)) {
-            if (is_file($this->path)) {
-                unlink($this->path);
+            if (is_file($this->lockFile)) {
+                unlink($this->lockFile);
             }
         }
 
@@ -85,11 +87,11 @@ class FileLock
     private function flock($operation): bool
     {
         if ($this->handle === null) {
-            $this->handle = fopen($this->path, "c");
+            $this->handle = fopen($this->lockFile, "c");
         }
 
         if (!is_resource($this->handle)) {
-            throw new FailedToOpenFile($this->path);
+            throw new FailedToOpenFile($this->lockFile);
         }
 
         return flock($this->handle, $operation);

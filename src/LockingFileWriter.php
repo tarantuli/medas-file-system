@@ -9,9 +9,14 @@ use Medas\Core\Attributes\Service;
 #[Service]
 readonly class LockingFileWriter
 {
+    public function __construct(
+        private string $lockDirectory,
+    )
+    {
+    }
     public function read(string $path): string
     {
-        $lock = new Locking\FileLock($path, new Locking\Settings(Locking\FileLock::SHARED));
+        $lock = new Locking\FileLock($path, new Locking\Settings($this->lockDirectory, Locking\FileLock::SHARED));
 
         $lock->acquire();
 
@@ -24,7 +29,7 @@ readonly class LockingFileWriter
 
     public function write(string $path, string $contents, bool $append = false): void
     {
-        $lock = new Locking\FileLock($path, new Locking\Settings(Locking\FileLock::EXCLUSIVE));
+        $lock = new Locking\FileLock($path, new Locking\Settings($this->lockDirectory, Locking\FileLock::EXCLUSIVE));
 
         $lock->acquire();
 
