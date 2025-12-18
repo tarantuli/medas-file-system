@@ -17,9 +17,9 @@ class PathNormalizer
      * Turns the given path into an absolute path without . and .. directories
      */
     public function normalize(
-        string  $path,
-        string  $directorySeparator = DIRECTORY_SEPARATOR,
-        ?string $workingDirectory = null,
+        string      $path,
+        string      $directorySeparator = DIRECTORY_SEPARATOR,
+        string|null $workingDirectory = null,
     ): string
     {
         $workingDirectory ??= getcwd();
