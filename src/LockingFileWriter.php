@@ -14,7 +14,7 @@ readonly class LockingFileWriter
     )
     {
         if (!is_dir($this->lockDirectory)) {
-            (new DirectoryCreator())->create($this->lockDirectory);
+            new DirectoryCreator()->create($this->lockDirectory);
         }
     }
 

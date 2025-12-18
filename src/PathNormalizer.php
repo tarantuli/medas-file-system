@@ -9,17 +9,17 @@ use Medas\Core\Attributes\Service;
 #[Service]
 class PathNormalizer
 {
-    private const SLASH = '/';
-    private const BACKSLASH = '\\';
-    private const DOUBLE_BACKSLASH = '\\\\';
+    private const string SLASH = '/';
+    private const string BACKSLASH = '\\';
+    private const string DOUBLE_BACKSLASH = '\\\\';
 
     /**
      * Turns the given path into an absolute path without . and .. directories
      */
     public function normalize(
-        string $path,
-        string $directorySeparator = DIRECTORY_SEPARATOR,
-        string $workingDirectory = null,
+        string  $path,
+        string  $directorySeparator = DIRECTORY_SEPARATOR,
+        ?string $workingDirectory = null,
     ): string
     {
         $workingDirectory ??= getcwd();
