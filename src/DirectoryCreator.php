@@ -41,10 +41,18 @@ readonly class DirectoryCreator implements DirectoryCreatorInterface
 
             try {
                 if (mkdir($currentDirectory) === false) {
+                    if (file_exists($currentDirectory)) {
+                        continue;
+                    }
+
                     throw new Exceptions\CantCreateDirectoryException($currentDirectory);
                 }
             }
             catch (\Exception) {
+                if (file_exists($currentDirectory)) {
+                    continue;
+                }
+
                 throw new Exceptions\CantCreateDirectoryException($currentDirectory);
             }
         }
