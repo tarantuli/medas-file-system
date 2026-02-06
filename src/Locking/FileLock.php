@@ -11,10 +11,10 @@ use Medas\FileSystem\Exceptions\{FailedToAcquireLockOnFile, FailedToOpenFile};
  */
 class FileLock
 {
-    public const true EXCLUSIVE = true;
-    public const false SHARED = false;
-    public const true BLOCKING = true;
-    public const false NON_BLOCKING = false;
+    public const  EXCLUSIVE = true;
+    public const  SHARED = false;
+    public const  BLOCKING = true;
+    public const  NON_BLOCKING = false;
 
     private mixed $handle = null;
     private readonly string $lockFile;
