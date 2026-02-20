@@ -7,7 +7,7 @@ namespace Medas\FileSystem;
 use Medas\Core\Attributes\Service;
 
 #[Service]
-class PathNormalizer
+readonly class PathNormalizer
 {
     private const string SLASH = '/';
     private const string BACKSLASH = '\\';

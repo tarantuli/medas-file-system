@@ -11,27 +11,38 @@ readonly class FileFinder implements FileFinderInterface
 {
     public function find(string $directory, string $matchPattern, string|null $ignorePattern = null): \Generator
     {
-        $handle = opendir($directory);
+        $handle = @opendir($directory);
 
-        while (false !== $entry = readdir($handle)) {
-            if ($entry === '.' || $entry === '..') {
-                continue;
-            }
+        if ($handle === false) {
+            throw new Exceptions\CannotOpenDirectory($directory);
+        }
 
-            $entry = $directory . DIRECTORY_SEPARATOR . $entry;
-
-            if (file_exists($entry . DIRECTORY_SEPARATOR . '..')) {
-                yield from $this->find($entry, $matchPattern, $ignorePattern);
-                continue;
-            }
-
-            if (preg_match($matchPattern, $entry)) {
-                if ($ignorePattern && preg_match($ignorePattern, $entry)) {
+        try {
+            while (false !== $entry = readdir($handle)) {
+                if ($entry === '.' || $entry === '..') {
                     continue;
                 }
 
-                yield $entry;
+                $entry = $directory . DIRECTORY_SEPARATOR . $entry;
+
+                if (file_exists($entry . DIRECTORY_SEPARATOR . '..')) {
+                    yield from $this->find($entry, $matchPattern, $ignorePattern);
+                    continue;
+                }
+
+                if (preg_match($matchPattern, $entry)) {
+                    if ($ignorePattern && preg_match($ignorePattern, $entry)) {
+                        continue;
+                    }
+
+                    yield $entry;
+                }
             }
+        }
+
+        finally{
+            // Always close the directory handle
+            closedir($handle);
         }
     }
 

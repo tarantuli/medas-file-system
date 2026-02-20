@@ -6,15 +6,15 @@ namespace Medas\FileSystem\Exceptions;
 
 use Medas\Core\Exceptions\BaseException;
 
-class CantCreateTemporaryFileException extends BaseException
+class DirectoryNotAllowed extends BaseException
 {
     public function __construct(string $directory)
     {
-        parent::__construct($directory, error_get_last()['message'] ?? 'Unknown error');
+        parent::__construct($directory);
     }
 
     public function pattern(): string
     {
-        return 'Cannot create temporary file in %s: %s';
+        return 'Directory %s is not in the allowed directories list';
     }
 }

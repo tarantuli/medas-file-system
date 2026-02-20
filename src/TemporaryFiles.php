@@ -20,26 +20,35 @@ class TemporaryFiles
     {
         foreach ($this->temporaryFiles as $file) {
             if (file_exists($file)) {
-                unlink($file);
+                @unlink($file);
             }
         }
     }
 
     public function create($content = null): string
     {
-        $tempFilename = @tempnam(sys_get_temp_dir(), 'file');
+        $tempFilename = tempnam(sys_get_temp_dir(), 'file');
 
         if ($tempFilename === false) {
-            throw new Exceptions\CantCreateTemporaryFileException();
+            throw new Exceptions\CantCreateTemporaryFileException(sys_get_temp_dir());
         }
 
         $this->temporaryFiles[] = $tempFilename;
 
         if ($content !== null) {
-            // Use fopen/fwrite/fclose instead of file_put_contents to bypass memory problems
-            $fh = fopen($tempFilename, 'w');
+            $fh = @fopen($tempFilename, 'w');
 
-            fwrite($fh, $content);
+            if ($fh === false) {
+                throw new Exceptions\FailedToOpenFile($tempFilename);
+            }
+
+            $result = fwrite($fh, $content);
+
+            if ($result === false) {
+                fclose($fh);
+
+                throw new Exceptions\FailedToWriteFile($tempFilename, 'Failed to write content');
+            }
 
             fclose($fh);
         }

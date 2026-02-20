@@ -6,7 +6,7 @@ namespace Medas\FileSystem\Exceptions;
 
 use Medas\Core\Exceptions\BaseException;
 
-class FailedToOpenFile extends BaseException
+class FailedToReadFile extends BaseException
 {
     public function __construct(string $path)
     {
@@ -15,6 +15,6 @@ class FailedToOpenFile extends BaseException
 
     public function pattern(): string
     {
-        return 'failed to open file %s: %s';
+        return 'Failed to read file %s: %s';
     }
 }

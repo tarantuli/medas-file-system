@@ -6,15 +6,15 @@ namespace Medas\FileSystem\Exceptions;
 
 use Medas\Core\Exceptions\BaseException;
 
-class FailedToOpenFile extends BaseException
+class PathTraversalAttempt extends BaseException
 {
     public function __construct(string $path)
     {
-        parent::__construct($path, error_get_last()['message'] ?? 'Unknown error');
+        parent::__construct($path);
     }
 
     public function pattern(): string
     {
-        return 'failed to open file %s: %s';
+        return 'Path traversal attempt detected: %s';
     }
 }

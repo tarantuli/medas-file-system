@@ -11,50 +11,24 @@ readonly class DirectoryCreator implements DirectoryCreatorInterface
 {
     public function create(string $path): void
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $path = str_replace('/', '\\', $path);
+        // Normalize path separators
+        $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+
+        // Check if already exists
+        if (is_dir($path)) {
+            return;
         }
 
-        // Start in the working directory if possible
-        $workingDirectory = getcwd();
+        // Try to create with the recursive flag
+        $success = @mkdir($path, 0755, true);
 
-        if (str_starts_with($path, $workingDirectory)) {
-            $currentDirectory = str_ends_with($workingDirectory, DIRECTORY_SEPARATOR)
-                ? $workingDirectory
-                : $workingDirectory . DIRECTORY_SEPARATOR;
-
-            $path = substr($path, strlen($currentDirectory));
-        }
-        else {
-            $currentDirectory = '';
-        }
-
-        // Check each remaining part in order
-        $parts = explode(DIRECTORY_SEPARATOR, $path);
-
-        foreach ($parts as $part) {
-            $currentDirectory .= $part . DIRECTORY_SEPARATOR;
-
-            if (file_exists($currentDirectory) && file_exists($currentDirectory . DIRECTORY_SEPARATOR . '..')) {
-                continue;
+        if (!$success) {
+            // Check if it was created by another process (race condition)
+            if (is_dir($path)) {
+                return;
             }
 
-            try {
-                if (mkdir($currentDirectory) === false) {
-                    if (file_exists($currentDirectory)) {
-                        continue;
-                    }
-
-                    throw new Exceptions\CantCreateDirectoryException($currentDirectory);
-                }
-            }
-            catch (\Exception) {
-                if (file_exists($currentDirectory)) {
-                    continue;
-                }
-
-                throw new Exceptions\CantCreateDirectoryException($currentDirectory);
-            }
+            throw new Exceptions\CantCreateDirectoryException($path, getcwd());
         }
     }
 }

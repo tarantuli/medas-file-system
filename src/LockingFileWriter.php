@@ -10,7 +10,8 @@ use Medas\Core\Attributes\Service;
 readonly class LockingFileWriter
 {
     public function __construct(
-        private string $lockDirectory,
+        private PathValidator $pathValidator,
+        private string        $lockDirectory,
     )
     {
         if (!is_dir($this->lockDirectory)) {
@@ -20,31 +21,53 @@ readonly class LockingFileWriter
 
     public function read(string $path): string
     {
+        // Validate the path first
+        $validPath = $this->pathValidator->validate($path);
+
         $lock = new Locking\FileLock(
-            $path,
+            $validPath,
             new Locking\Settings($this->lockDirectory, Locking\FileLock::SHARED)
         );
 
-        $lock->acquire();
+        try {
+            $lock->acquire();
 
-        $contents = file_get_contents($path);
+            $contents = @file_get_contents($validPath);
 
-        $lock->release();
+            if ($contents === false) {
+                throw new Exceptions\FailedToReadFile($validPath);
+            }
 
-        return $contents;
+            return $contents;
+        }
+
+        finally{
+            $lock->release();
+        }
     }
 
     public function write(string $path, string $contents, bool $append = false): void
     {
+        // Validate the path first
+        $validPath = $this->pathValidator->validate($path);
+
         $lock = new Locking\FileLock(
-            $path,
+            $validPath,
             new Locking\Settings($this->lockDirectory, Locking\FileLock::EXCLUSIVE)
         );
 
-        $lock->acquire();
+        try {
+            $lock->acquire();
 
-        file_put_contents($path, $contents, $append ? FILE_APPEND : 0);
+            $result = @file_put_contents($validPath, $contents, $append ? FILE_APPEND : 0);
 
-        $lock->release();
+            if ($result === false) {
+                throw new Exceptions\FailedToWriteFile($validPath);
+            }
+        }
+
+        finally{
+            $lock->release();
+        }
     }
 }
