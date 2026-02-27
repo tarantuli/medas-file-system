@@ -47,7 +47,7 @@ class TemporaryFiles
             if ($result === false) {
                 fclose($fh);
 
-                throw new Exceptions\FailedToWriteFile($tempFilename, 'Failed to write content');
+                throw new Exceptions\FailedToWriteFile($tempFilename);
             }
 
             fclose($fh);

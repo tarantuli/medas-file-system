@@ -25,7 +25,7 @@ readonly class FileLoader implements FileLoaderInterface
             // Validate each file is still in the allowed directory
             $validatedFile = $this->pathValidator->validate($fileName);
 
-            // Verify file is actually in the original directory (prevent symlink attacks)
+            // Verify the file is actually in the original directory (prevent symlink attacks)
             if (!str_starts_with($validatedFile, $validatedDir)) {
                 throw new Exceptions\PathTraversalAttempt($fileName);
             }

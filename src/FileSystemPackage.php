@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
-use Medas\Core\AsSingleton;
-use Medas\ServiceManager\BasePackage;
+use Medas\Core\{AsSingleton, BasePackage};
 
 class FileSystemPackage extends BasePackage
 {
