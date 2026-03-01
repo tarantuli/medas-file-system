@@ -37,6 +37,6 @@ readonly class AllowedBasePaths implements ConfigOption
 
     public function default(): array
     {
-        return [realpath(__DIR__ . '/..')];
+        return [getcwd()];
     }
 }
