@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Medas\FileSystem;
 
-use Medas\Core\Attributes\Service;
+use Medas\Core\Attributes\{ConfigValue, Service};
 
 #[Service]
 readonly class LockingFileWriter
@@ -12,6 +12,9 @@ readonly class LockingFileWriter
     public function __construct(
         private PathValidator $pathValidator,
         private string        $lockDirectory,
+
+        #[ConfigValue(ConfigOptions\LockMaxRetryTime::class)]
+        private float         $lockMaxRetryTime = 1.0,
     )
     {
         if (!is_dir($this->lockDirectory)) {
@@ -26,7 +29,11 @@ readonly class LockingFileWriter
 
         $lock = new Locking\FileLock(
             $validPath,
-            new Locking\Settings($this->lockDirectory, Locking\FileLock::SHARED)
+            new Locking\Settings(
+                $this->lockDirectory,
+                Locking\FileLock::SHARED,
+                maxRetryTime: $this->lockMaxRetryTime
+            )
         );
 
         try {
@@ -53,7 +60,11 @@ readonly class LockingFileWriter
 
         $lock = new Locking\FileLock(
             $validPath,
-            new Locking\Settings($this->lockDirectory, Locking\FileLock::EXCLUSIVE)
+            new Locking\Settings(
+                $this->lockDirectory,
+                Locking\FileLock::EXCLUSIVE,
+                maxRetryTime: $this->lockMaxRetryTime
+            )
         );
 
         try {
