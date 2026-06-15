@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use Medas\FileSystem\FileSystemPackage;
-use Medas\ServiceManager\{ServiceConfig, ServiceManager};
+use Medas\ObjectInstantiator\ObjectInstantiator;
+use Medas\ServiceManager\{ServiceConfigBuilder, ServiceManager};
 
-new ServiceManager(function (): ServiceConfig {
-    $config = new ServiceConfig();
+new ServiceManager(function (): ServiceConfigBuilder {
+    $config = new ServiceConfigBuilder(ObjectInstantiator::class);
 
     $config->addPackages([
         FileSystemPackage::instance(),
