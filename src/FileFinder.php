@@ -25,7 +25,9 @@ readonly class FileFinder implements FileFinderInterface
 
                 $entry = $directory . DIRECTORY_SEPARATOR . $entry;
 
-                if (file_exists($entry . DIRECTORY_SEPARATOR . '..')) {
+                // Not file_exists($entry . '/..'): paths are normalised lexically on Windows (and some other file
+                // systems), where "file/.." is simply the parent directory, so every file would be taken for a directory
+                if (is_dir($entry)) {
                     yield from $this->find($entry, $matchPattern, $ignorePattern);
                     continue;
                 }
